@@ -19,6 +19,12 @@
     <link href="resources/css/styles.css" rel="stylesheet">
 </head>
 <body>
+	    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="resources/js/jquery-2.2.3.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="resources/js/bootstrap.min.js"></script>
+    <script src="resources/js/mustache.js"></script>
+    <script src="resources/js/custom.js"></script>
 	<div>
 		<tiles:insertAttribute name="menu" />
 	</div>
@@ -29,10 +35,5 @@
 		<tiles:insertAttribute name="footer" />
 	</div>
 	
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="resources/js/jquery-2.2.3.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="resources/js/bootstrap.min.js"></script>
-    <script src="resources/js/mustache.js"></script>
-    <script src="resources/js/custom.js"></script>
+
 </html>
