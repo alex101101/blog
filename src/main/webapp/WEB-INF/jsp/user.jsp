@@ -1,4 +1,5 @@
 <div class="container" id="SiteBody">
+	<script src="resources/js/custom.js"></script>
 		
 	 <div class="container" id="SiteBody">
 	User access area!!

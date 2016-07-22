@@ -24,7 +24,7 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="resources/js/bootstrap.min.js"></script>
     <script src="resources/js/mustache.js"></script>
-    <script src="resources/js/custom.js"></script>
+    
 	<div>
 		<tiles:insertAttribute name="menu" />
 	</div>
