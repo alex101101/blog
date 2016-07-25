@@ -19,7 +19,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li class="active"><a href="/blog">Home <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">New Post</a></li>
+            <li><a href="/blog/post">New Post</a></li>
             <li><a href="#">About</a></li>
             <li><a href="#">Contact</a></li>
             <li><a href="#">Resume</a></li>

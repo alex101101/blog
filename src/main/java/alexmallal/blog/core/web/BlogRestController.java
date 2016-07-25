@@ -13,20 +13,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import alexmallal.blog.core.model.Category;
 import alexmallal.blog.core.model.Post;
 import alexmallal.blog.core.services.BlogService;
+import alexmallal.blog.core.services.CategoryService;
 
 
 @RestController
 public class BlogRestController {
 	@Autowired
 	BlogService blogService;
+	
+	@Autowired
+	CategoryService categoryService;
 	
 	private static final Logger logger = Logger.getLogger(UserRestController.class);
 	
@@ -42,6 +48,31 @@ public class BlogRestController {
 			return new ResponseEntity<List<Post>>(blogList, HttpStatus.OK);
 
 	}
+	
+	@RequestMapping(value = "rest/blog/{id}", produces=MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<Post> getPost(@PathVariable("id") long id) {
+
+			Post singlePost = blogService.findPostById(id);
+			if (singlePost==null) {
+				logger.debug("No post found for this id");
+				return new ResponseEntity<Post>(HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity<Post>(singlePost, HttpStatus.OK);
+
+	}
+	
+	@RequestMapping(value = "rest/blog/categories", produces=MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<List<Category>> getAllCategories() {
+
+			List<Category> categoryList = categoryService.findAllCategories();
+			if (categoryList==null) {
+				logger.debug("No categories found");
+				return new ResponseEntity<List<Category>>(HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity<List<Category>>(categoryList, HttpStatus.OK);
+
+	}
+	
 	
 	@RequestMapping(value = "rest/blog/", method = RequestMethod.POST)
 	public ResponseEntity<Post> createUser(@Valid @RequestBody Post post, UriComponentsBuilder ucBuilder) {

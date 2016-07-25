@@ -22,8 +22,7 @@ public class BlogServiceImpl implements BlogService {
 	@Autowired
 	PostDao postDao;
 	
-	@Autowired
-	CategoryDao categoryDao;
+
 	
 	public Post findPostById(Long id) {
 		return postDao.findById(id);

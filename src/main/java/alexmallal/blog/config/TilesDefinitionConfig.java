@@ -25,6 +25,8 @@ public final class TilesDefinitionConfig implements DefinitionsFactory {
 		addDefaultLayoutDefinition("login", "Login Here", "/WEB-INF/jsp/login.jsp");
 		addDefaultLayoutDefinition("user", "User only Page", "/WEB-INF/jsp/user.jsp");
 		addDefaultLayoutDefinition("register", "Registration Page", "/WEB-INF/jsp/register.jsp");
+		addDefaultLayoutDefinition("post", "Create a New Post", "/WEB-INF/jsp/post.jsp");
+		addDefaultLayoutDefinition("postind", "Individual Post", "/WEB-INF/jsp/indpost.jsp");
 	}
 
 	private static void addDefaultLayoutDefinition(String name, String title, String body) {
