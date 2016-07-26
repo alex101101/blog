@@ -1,12 +1,14 @@
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <div class="container" id="SiteBody">
 	<script src="resources/js/custom.js"></script>
 		
 	 <div class="container" id="SiteBody">
 	User access area!!
 
-	
+	<sec:authorize access= "hasRole('ADMIN') " >
+	<h4>List of All Accounts:</h4>
 	<div class="table-responsive">
-	<table class="table">
+	<table class="table" id="allUsersTable">
 		<thead>
 		  <tr>
 		  	<th>ID</th>
@@ -24,7 +26,10 @@
   			</tbody>
 		</table>
 	</div>
-
+	</sec:authorize>
+	
+	<h4>Personal Details:</h4>
+	
     <template id="user-template">
       
       <li data-id="{{id}}">

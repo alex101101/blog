@@ -18,7 +18,6 @@ $(document).ready(function () {
 		type: 'GET',
 		url: 'http://localhost:8080/blog/rest/accountdetails/',
 		success: function(userrest) {
-			console.log(userrest);
 				addUser(userrest);
 		},
 		error: function() {
@@ -28,7 +27,7 @@ $(document).ready(function () {
 	$user.delegate('.editUser','click',function(){
 
 		var $closestli = $(this).closest('li');
-		console.log($closestli.find('span.firstName').html());
+//		console.log($closestli.find('span.firstName').html());
 		$closestli.find('input.firstName').val($closestli.find('span.firstName').text());
 		$closestli.find('input.lastName').val($closestli.find('span.lastName').text());
 		$closestli.find('input.emailAddress').val($closestli.find('span.emailAddress').text());
@@ -96,6 +95,8 @@ $(document).ready(function () {
 			$closestli.find('span.emailAddress').text(user.emailAddress);
 			$closestli.find('span.password').text("********");
 			$closestli.removeClass('edit');
+			$('#allUsersTable tbody tr').empty();
+			start();
 
 		},
 		error: function(){
@@ -124,41 +125,54 @@ function logout() {
 
 function start() {
     $.ajax({
-        url: "http://localhost:8080/blog/rest/accountdetails/",
+        url: "http://localhost:8080/blog/rest/accountdetails/all/",
         type: "GET",
         	"crossDomain":true,
         	"dataType": "json",
         		"success" : function(data) {
     	console.log("function was called");
-    console.log(data);
+
+    //globally save all roles to overcome lazy loading
+    var save=[];
+    
+    $.each(data, function (i, inddata) {
     
   	  // then create table
-  	  var results = data,
-  	     i;
 
-  	
-  	var arrayLength = Object.keys(results.roles).length;
+  	//unpack roles array
+  	var arrayLength = Object.keys(inddata.roles).length;
   	var arr1=[];
+  	
   	for (var i = 0; i < arrayLength; i++) {
-  		arr1.push(results.roles[i].name);
+  		if(typeof (inddata.roles[i].name) !== 'undefined'){
+  		arr1.push(inddata.roles[i].name);
+  		save.push(inddata.roles[i].name);
+
+  		} else {
+  			arr1.push(save[inddata.roles[i]-1]);
+  		}
+  		
 
   	}
+//  	console.log(arr1);
+//  	console.log(arrayLength);
   	  
   		
   	    $('#loadHere').append(
   	      '<tr>' +
-  	    '<td>' + data.id + '</td>' +
-  	        '<td>' + data.username + '</td>' +
-  	        '<td>' + data.emailAddress + '</td>' +
-  	        '<td>' + data.firstName + '</td>' +
-  	        '<td>' + data.lastName + '</td>' +
-  	        '<td>' + data.password + '</td>' +
+  	    '<td>' + inddata.id + '</td>' +
+  	        '<td>' + inddata.username + '</td>' +
+  	        '<td>' + inddata.emailAddress + '</td>' +
+  	        '<td>' + inddata.firstName + '</td>' +
+  	        '<td>' + inddata.lastName + '</td>' +
+  	        '<td>' + inddata.password + '</td>' +
   	        '<td>' + arr1 + '</td>' +
-  	        '<td>' + data.dateOfRegister + '</td>' +
-  	        '<td>' + data.lastLoggedIn + '</td>' +
+  	        '<td>' + inddata.dateOfRegister + '</td>' +
+  	        '<td>' + inddata.lastLoggedIn + '</td>' +
   	        
   	      '</tr>' 
   	    );
+    });
   	  
     },
 	error : function(e) {
