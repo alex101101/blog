@@ -46,6 +46,16 @@
 }
 
 
+
+#insertEditLinkOption {
+    font-size:12px;
+    
+}
+
+#formatHeadingEdit h2 {
+	display: inline;
+}
+
 img {
     height: auto;
 }

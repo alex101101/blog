@@ -27,6 +27,8 @@ public final class TilesDefinitionConfig implements DefinitionsFactory {
 		addDefaultLayoutDefinition("register", "Registration Page", "/WEB-INF/jsp/register.jsp");
 		addDefaultLayoutDefinition("post", "Create a New Post", "/WEB-INF/jsp/post.jsp");
 		addDefaultLayoutDefinition("postind", "Individual Post", "/WEB-INF/jsp/indpost.jsp");
+		addDefaultLayoutDefinition("editpost", "Edit your post", "/WEB-INF/jsp/editpost.jsp");
+		addCustomHeaderLayoutDefinition("editpost", "Edit your post", "/WEB-INF/jsp/editpost.jsp", "/WEB-INF/jsp/editpostheader.jsp");
 	}
 
 	private static void addDefaultLayoutDefinition(String name, String title, String body) {
@@ -35,6 +37,21 @@ public final class TilesDefinitionConfig implements DefinitionsFactory {
 
 		attributes.put("title", new Attribute(title));
 		attributes.put("header", new Attribute("/WEB-INF/jsp/tiles/header.jsp"));
+		attributes.put("menu", new Attribute("/WEB-INF/jsp/tiles/menu.jsp"));
+		attributes.put("body", new Attribute(body));
+		attributes.put("footer", new Attribute("/WEB-INF/jsp/tiles/footer.jsp"));
+
+		Attribute baseTemplate = new Attribute("/WEB-INF/jsp/tiles/layout.jsp");
+
+		TILES_DEFINITIONS.put(name, new Definition(name, baseTemplate, attributes));
+	}
+	
+	private static void addCustomHeaderLayoutDefinition(String name, String title, String body, String header) {
+
+		Map<String, Attribute> attributes = new HashMap<>();
+
+		attributes.put("title", new Attribute(title));
+		attributes.put("header", new Attribute(header));
 		attributes.put("menu", new Attribute("/WEB-INF/jsp/tiles/menu.jsp"));
 		attributes.put("body", new Attribute(body));
 		attributes.put("footer", new Attribute("/WEB-INF/jsp/tiles/footer.jsp"));

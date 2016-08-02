@@ -83,7 +83,7 @@ public class ApplicationContext extends WebMvcConfigurerAdapter {
     }
     
     @Override
-    @Order(Ordered.HIGHEST_PRECEDENCE)
+    @Order(1)
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
       configurer.favorPathExtension(false).
               favorParameter(true).
@@ -104,6 +104,7 @@ public class ApplicationContext extends WebMvcConfigurerAdapter {
 //    }
     
     @Override
+    @Order(2)
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(converter());
     }
@@ -118,7 +119,7 @@ public class ApplicationContext extends WebMvcConfigurerAdapter {
     }
 
 
-    @Order(Ordered.HIGHEST_PRECEDENCE+1)
+    @Order(3)
     @Bean
       public ViewResolver getViewResolver() {
     

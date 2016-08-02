@@ -35,7 +35,7 @@
 
                   <c:choose>
 					<c:when test = "${!empty loggedInUser}">
-						<p class="navbar-text pull-md-right pull-lg-right pull-sm-left">Hello ${loggedInUser}!</p>
+						<p id="loggedInUser" class="navbar-text pull-md-right pull-lg-right pull-sm-left">Hello ${loggedInUser}!</p>
 					</c:when>
 				</c:choose>
 

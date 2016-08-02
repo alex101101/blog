@@ -72,6 +72,8 @@ public class User extends Base {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
+	
+//	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}

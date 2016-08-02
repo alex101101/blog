@@ -1,6 +1,7 @@
 package alexmallal.blog.core.model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -37,6 +39,8 @@ public class Post extends Base {
 	private Date dateCreated;
 
 	private Date dateLastUpdated;
+	
+	private User singleUser;
 
 	
 	
@@ -63,7 +67,7 @@ public class Post extends Base {
 		this.byline = byline;
 	}
 	
-	@ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.MERGE)
     @JoinTable(name = "post_category", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
 	public Set<Category> getCategories() {
 		return categories;
@@ -125,6 +129,15 @@ public class Post extends Base {
 	}
 	public void setThumbnail(Boolean thumbnail) {
 		this.thumbnail = thumbnail;
+	}
+	
+	@ManyToOne(cascade = CascadeType.MERGE, fetch=FetchType.EAGER)
+	@JoinTable(name = "post_user", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+	public User getSingleUser() {
+		return singleUser;
+	}
+	public void setSingleUser(User singleUser) {
+		this.singleUser = singleUser;
 	}
 
 

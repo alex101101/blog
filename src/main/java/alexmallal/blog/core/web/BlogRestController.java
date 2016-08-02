@@ -22,14 +22,19 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import alexmallal.blog.core.model.Category;
 import alexmallal.blog.core.model.Post;
+import alexmallal.blog.core.model.User;
 import alexmallal.blog.core.services.BlogService;
 import alexmallal.blog.core.services.CategoryService;
+import alexmallal.blog.core.services.UserService;
 
 
 @RestController
 public class BlogRestController {
 	@Autowired
 	BlogService blogService;
+	
+	@Autowired
+	UserService userService;
 	
 	@Autowired
 	CategoryService categoryService;
@@ -61,6 +66,7 @@ public class BlogRestController {
 
 	}
 	
+	//for populating dropdown option list on page load, subcomponent
 	@RequestMapping(value = "rest/blog/categories", produces=MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public ResponseEntity<List<Category>> getAllCategories() {
 
@@ -85,38 +91,42 @@ public class BlogRestController {
 	        return new ResponseEntity<Post>(post, headers, HttpStatus.CREATED);
 
 	}
-//	
-//
-//	
-//
-//	@RequestMapping(value = "rest/accountdetails/all", produces=MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-//	public ResponseEntity<List<User>> getAllUser(Principal principal) {
-//
-//
-//		List<User> users = userService.findAllUsers();
-//			if (users==null) {
-//				logger.debug("Unsuccessful find all");
-//				return new ResponseEntity<List<User>>(HttpStatus.NOT_FOUND);
-//			}
-//			return new ResponseEntity<List<User>>(users, HttpStatus.OK);
-//
-//	}
-//	
-//	@RequestMapping(value = "rest/accountdetails/", produces=MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-//	public ResponseEntity<User> updateUser(@RequestBody User user, Principal principal) {
-//		final String currentUsername = principal.getName();
-//		User currentUser = userService.getUserName(currentUsername);
-//		if (user==null) {
-//			logger.debug("Username not found");
-//			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-//		}
-//		currentUser.setEmailAddress(user.getEmailAddress());
-//		currentUser.setFirstName(user.getFirstName());
-//		currentUser.setLastName(user.getLastName());
-//		currentUser.setPassword(user.getPassword());
-//		userService.updateUser(currentUser);
-//		return new ResponseEntity<User>(currentUser, HttpStatus.OK);
-//	}
+
+//	Need user authentication for put and delete.  Will now get the post creator's user 
+//	object in each post, compare currentUser to post.getSingleUser for equivalence,
+//	if true then update, otherwise send badrequest.  Use javascript to put edit buttons
+//	only for user's own posts (insecure, but if overwritten still can't edit other's posts
+	
+	@RequestMapping(value = "rest/blog/{id}", produces=MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
+	public ResponseEntity<Post> updatePost(@Valid @RequestBody Post post, Principal principal) {
+		final String currentUsername = principal.getName();
+		if (post==null) {
+			logger.debug("Post not found");
+			return new ResponseEntity<Post>(HttpStatus.NOT_FOUND);
+		}
+		logger.debug("here it is"+post.getAuthor().toString());
+		User currentUser = userService.getUserName(currentUsername);
+		Post entirePost = blogService.findPostById(post.getId());
+		User currentPostUserObject = (User) entirePost.getSingleUser();
+		if (currentUser.getUsername().equals(currentPostUserObject.getUsername())) {
+			logger.debug("Working true");
+			entirePost.setId(post.getId());
+			entirePost.setAuthor(post.getAuthor());
+			entirePost.setBody(post.getBody());
+			entirePost.setImageUrl(post.getImageUrl());
+			entirePost.setVideoUrl(post.getVideoUrl());
+			entirePost.setTitle(post.getTitle());
+			entirePost.setThumbnail(post.getThumbnail());
+			entirePost.setTopPost(post.getTopPost());
+			entirePost.setDateLastUpdated(new Date());
+			entirePost.setCategories(post.getCategories());
+			blogService.updatePost(entirePost);
+			return new ResponseEntity<Post>(entirePost, HttpStatus.OK);
+		}
+		logger.debug("You are not allowed to post to someone elses post");
+		return new ResponseEntity<Post>(HttpStatus.UNAUTHORIZED);
+
+	}
 //	
 //	@RequestMapping(value = "rest/accountdetails/", produces=MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 //	public ResponseEntity<User> deleteUser(Principal principal) {

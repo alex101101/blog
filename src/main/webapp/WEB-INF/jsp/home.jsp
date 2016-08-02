@@ -22,7 +22,7 @@
             </a></div>
 
             <div class="caption">
-              <h3><a id="MakeLinkBlack" href="post/{{id}}">{{title}}</a></h3>
+              <h3><a id="MakeLinkBlack" href="{{id}}">{{title}}</a></h3>
             </div>
         </div>
         </div>

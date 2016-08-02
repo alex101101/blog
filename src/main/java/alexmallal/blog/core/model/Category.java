@@ -1,5 +1,6 @@
 package alexmallal.blog.core.model;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -15,7 +16,7 @@ import alexmallal.blog.core.commons.model.Base;
 @Table(name = "category")
 public class Category extends Base {
 	private String categoryName;
-    
+
     private Set<Post> posts;
 
 	public String getCategoryName() {

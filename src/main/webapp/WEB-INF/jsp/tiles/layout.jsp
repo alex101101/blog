@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <html lang="en">
 <head>
@@ -14,22 +14,27 @@
  	 
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title><tiles:insertAttribute name="title" ignore="true" /></title>
-
+	
     <!-- Bootstrap -->
-
-    <link rel="stylesheet" href="<c:url value='resources/css/bootstrap.min.css'/>"></link>
-    <link rel="stylesheet" href="<c:url value='resources/css/styles.css'/>"></link>
-
-</head>
-<body>
-	    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	    <c:url value="resources/js/jquery-2.2.3.js" var="jquery" />
-	    <c:url value="resources/js/bootstrap.min.js" var="bootstrapjs" />
-	    <c:url value="resources/js/mustache.js" var="mustachejs" />
+	<spring:url value="/resources/css/bootstrap.min.css" var="bootstrapcss" htmlEscape="true"></spring:url>
+	<spring:url value="/resources/css/styles.css" var="stylescss" htmlEscape="true"></spring:url>
+    <link rel="stylesheet" href="${bootstrapcss}"></link>
+    <link rel="stylesheet" href="${stylescss}"></link>
+   
+    
+    	    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	    <spring:url value="/resources/js/jquery-2.2.3.js" var="jquery" htmlEscape="true"></spring:url>
+	    <spring:url value="/resources/js/bootstrap.min.js" var="bootstrapjs" htmlEscape="true"></spring:url>
+	    <spring:url value="/resources/js/mustache.js" var="mustachejs" htmlEscape="true"></spring:url>
     <script src="${jquery}" ></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="${bootstrapjs}"></script>
     <script src="${mustachejs}"></script>
+    
+        <tiles:insertAttribute name="header" />
+
+</head>
+<body>
     
 	<div>
 		<tiles:insertAttribute name="menu" />

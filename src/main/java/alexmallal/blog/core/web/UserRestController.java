@@ -90,8 +90,12 @@ public class UserRestController {
 		currentUser.setEmailAddress(user.getEmailAddress());
 		currentUser.setFirstName(user.getFirstName());
 		currentUser.setLastName(user.getLastName());
+		if(user.getPassword()!=null) {
 		currentUser.setPassword(user.getPassword());
 		userService.updateUserPassword(currentUser);
+		}
+		userService.updateUser(currentUser);
+		
 		return new ResponseEntity<User>(currentUser, HttpStatus.OK);
 	}
 	

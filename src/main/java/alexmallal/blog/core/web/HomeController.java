@@ -45,5 +45,14 @@ public class HomeController {
         return "postind";
     }
     
+//    @RequestMapping(value = "/{id}/edit", method = RequestMethod.GET)
+//    public String editIndPost(@PathVariable("id") long id, Model model){
+//    	//logs debug message
+//		if(logger.isDebugEnabled()){
+//			logger.debug("Ind post is executed!");
+//		}
+//        return "editpost";
+//    }
+    
 
 }

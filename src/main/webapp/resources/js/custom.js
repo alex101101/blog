@@ -69,12 +69,18 @@ $(document).ready(function () {
 
 	$user.delegate('.saveUser','click',function(){
 	var $closestli = $(this).closest('li');
+
 	var user = {
 		emailAddress: $closestli.find('input.emailAddress').val(),
 		firstName: $closestli.find('input.firstName').val(),
-		lastName: $closestli.find('input.lastName').val(),
-		password: $closestli.find('input.password').val()
+		lastName: $closestli.find('input.lastName').val()
 	};
+	
+	if ($closestli.find('input.password').val()!="********") {
+		user.password = $closestli.find('input.password').val()
+		console.log('CALLED');
+	}
+	
 
 //	var token = $("meta[name='_csrf']").attr("content");
 //	var header = $("meta[name='_csrf_header']").attr("content");
