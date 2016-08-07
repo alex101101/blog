@@ -17,12 +17,12 @@
         <div class="col-sm-6 col-md-3">
             <div class="thumbnail">
 
-            <div id="ThumbImg"><a href="{{id}}">
+            <div id="ThumbImg"><a href="post/{{id}}">
             <img src={{imageUrl}} class="img-responsive" alt="Responsive image">
             </a></div>
 
             <div class="caption">
-              <h3><a id="MakeLinkBlack" href="{{id}}">{{title}}</a></h3>
+              <h3><a id="MakeLinkBlack" href="post/{{id}}">{{title}}</a></h3>
             </div>
         </div>
         </div>
@@ -38,7 +38,7 @@
         <div id="mainSiteBody"></div>
       <template id="mainSiteBody-template">
 
-        <h2 class="title"><a id="MakeLinkBlack" href="{{id}}">{{title}}</a></h2>
+        <h2 class="title"><a id="MakeLinkBlack" href="post/{{id}}">{{title}}</a></h2>
 
  
               <p><span id="AuthorPad" class="text-muted"> {{author}} </span><span class="text-muted" id="AuthorPad"> Date: {{dateCreated}} </span><span class="label label-info pull-md-right pull-lg-right pull-sm-left pull-xs-left"><strong>Categories: {{categories}} </strong></span>  &nbsp</p>
@@ -61,7 +61,7 @@
 
 
           <template id="topPostInsert-template">
-          <li id="pill" role="presentation"><a data-toggle="tooltip" title="{{title}}" href="{{id}}">{{title}}</a></li>
+          <li id="pill" role="presentation"><a data-toggle="tooltip" title="{{title}}" href="post/{{id}}">{{title}}</a></li>
 
           </template>
         </ul>

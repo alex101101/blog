@@ -26,10 +26,14 @@
 	    <spring:url value="/resources/js/jquery-2.2.3.js" var="jquery" htmlEscape="true"></spring:url>
 	    <spring:url value="/resources/js/bootstrap.min.js" var="bootstrapjs" htmlEscape="true"></spring:url>
 	    <spring:url value="/resources/js/mustache.js" var="mustachejs" htmlEscape="true"></spring:url>
+	    <spring:url value="/resources/js/jquery-ui.js" var="jqueryui" htmlEscape="true"></spring:url>
+	    <spring:url value="/resources/js/search.js" var="search" htmlEscape="true"></spring:url>
     <script src="${jquery}" ></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="${bootstrapjs}"></script>
     <script src="${mustachejs}"></script>
+    <script src="${jqueryui}"></script>
+    <script src="${search}"></script>
     
         <tiles:insertAttribute name="header" />
 

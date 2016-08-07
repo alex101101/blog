@@ -26,6 +26,7 @@ import alexmallal.blog.core.model.User;
 import alexmallal.blog.core.services.BlogService;
 import alexmallal.blog.core.services.CategoryService;
 import alexmallal.blog.core.services.UserService;
+import alexmallal.elasticsearch.services.BlogElasticService;
 
 
 @RestController
@@ -38,6 +39,7 @@ public class BlogRestController {
 	
 	@Autowired
 	CategoryService categoryService;
+	
 	
 	private static final Logger logger = Logger.getLogger(UserRestController.class);
 	
@@ -86,6 +88,7 @@ public class BlogRestController {
 			post.setDateCreated(new Date());
 			post.setDateLastUpdated(new Date());
 			blogService.createPost(post);
+
 			HttpHeaders headers = new HttpHeaders();
 	        headers.setLocation(ucBuilder.path("/rest/blog/{id}").buildAndExpand(post.getId()).toUri());
 	        return new ResponseEntity<Post>(post, headers, HttpStatus.CREATED);

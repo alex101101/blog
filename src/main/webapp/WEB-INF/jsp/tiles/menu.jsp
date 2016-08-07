@@ -1,6 +1,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-
+<%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+   <spring:url value="/login" var="login" htmlEscape="true"></spring:url>
+      <spring:url value="/register" var="register" htmlEscape="true"></spring:url>
+   <spring:url value="/logout" var="logout" htmlEscape="true"></spring:url>
+   <spring:url value="/user" var="user" htmlEscape="true"></spring:url>
 
     <nav class="navbar navbar-default">
       <div class="container-fluid">
@@ -28,7 +32,7 @@
 
           <form class="navbar-form pull-md-right pull-lg-right pull-sm-left" role="search">
               <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search">
+                <input type="text" class="form-control autocomplete" placeholder="Search">
               </div>
             <button type="submit" class="btn btn-default">Submit</button>
           </form>
@@ -45,17 +49,16 @@
               <ul class="dropdown-menu">
                 <c:choose>
 					<c:when test = "${empty loggedInUser}">
-		                <li><a href="login">Login</a></li>
-		                <li><a href="register">Register</a></li>
+		                <li><a href="${login}">Login</a></li>
+		                <li><a href="${register}">Register</a></li>
 		                <li class="disabled"><a href="accountdetails">Account Details</a></li>
 					</c:when>
 					<c:otherwise>
-		                <li class="disabled"><a href="login">Login</a></li>
-		                <li class="disabled"><a href="register">Register</a></li>
-		                <li><a href="user">Account Details</a></li>
+		                <li class="disabled"><a href="${login}">Login</a></li>
+		                <li class="disabled"><a href="${register}">Register</a></li>
+		                <li><a href="${user}">Account Details</a></li>
 		                <div class="contatainer" id="Logout">
-		                <c:url var="logoutUrl" value="/logout"/>
-		                <form class="navbar-form pull-md-right pull-lg-right pull-sm-left" method="POST" action="${logoutUrl}" role="logout">
+		                <form class="navbar-form pull-md-right pull-lg-right pull-sm-left" method="POST" action="${logout}" role="logout">
 				           <button type="submit" class="btn btn-link">Log out</button>
 				           <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 				         </form>

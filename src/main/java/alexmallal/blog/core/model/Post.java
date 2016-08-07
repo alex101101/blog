@@ -34,7 +34,7 @@ public class Post extends Base {
 
 	private String imageUrl;
 
-	private Set<Category> categories;
+	private List<Category> categories;
 
 	private Date dateCreated;
 
@@ -69,10 +69,10 @@ public class Post extends Base {
 	
 	@ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.MERGE)
     @JoinTable(name = "post_category", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
-	public Set<Category> getCategories() {
+	public List<Category> getCategories() {
 		return categories;
 	}
-	public void setCategories(Set<Category> categories) {
+	public void setCategories(List<Category> categories) {
 		this.categories = categories;
 	}
 	public Date getDateCreated() {

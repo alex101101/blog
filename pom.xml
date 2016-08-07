@@ -95,6 +95,14 @@
 	       <artifactId>spring-webmvc</artifactId>
 	       <version>${spring.version}</version>
 	   </dependency>
+	   
+	   <!-- Spring Elasticsearch -->
+	    <dependency>
+	        <groupId>org.springframework.data</groupId>
+	        <artifactId>spring-data-elasticsearch</artifactId>
+	        <version>2.0.2.RELEASE</version>
+	    </dependency>
+
 	   <!-- Spring Security -->
 	   <dependency>
 	       <groupId>org.springframework.security</groupId>
@@ -142,7 +150,7 @@
                 <scope>provided</scope>
             </dependency>
 	   
-	   <!-- Jackson -->
+	   <!-- Jackson 	MORE RECENT VERSION INCLUDED WITH SPRING ELASTICSEARCH JPA-->
 <!-- 	   <dependency>
 	       <groupId>org.codehaus.jackson</groupId>
 	       <artifactId>jackson-core-asl</artifactId>
@@ -153,7 +161,7 @@
 	       <artifactId>jackson-mapper-asl</artifactId>
 	       <version>${jackson.version}</version>
 	   </dependency> -->
-	       <dependency>
+<!-- 	       <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
             <version>2.2.4</version>
@@ -167,8 +175,14 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.2.4</version>
-        </dependency>
+        </dependency> -->
         
+       <!-- ModelMapper -->
+        <dependency>
+		    <groupId>org.modelmapper</groupId>
+		    <artifactId>modelmapper</artifactId>
+		    <version>0.7.4</version>
+		</dependency>
 	   <!-- Spring Data JPA -->
 	   <dependency>
 	       <groupId>org.springframework.data</groupId>
@@ -270,6 +284,12 @@
     	<groupId>org.apache.tiles</groupId>
     	<artifactId>tiles-extras</artifactId>
     	<version>3.0.5</version>
+    		    <exclusions>
+			    <exclusion>
+			    	<artifactId>guava</artifactId>
+			    	<groupId>com.google.guava</groupId>
+			    </exclusion>
+    		    </exclusions>
     </dependency>
   </dependencies>
 </project>

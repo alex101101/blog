@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +21,8 @@ import alexmallal.blog.core.model.Post;
 import alexmallal.blog.core.model.User;
 import alexmallal.blog.core.services.BlogService;
 import alexmallal.blog.core.services.UserService;
+import alexmallal.elasticsearch.model.Blog;
+import alexmallal.elasticsearch.services.BlogElasticService;
 
 @Service("blogService")
 public class BlogServiceImpl implements BlogService {
@@ -29,6 +32,12 @@ public class BlogServiceImpl implements BlogService {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	BlogElasticService blogElasticService;
+	
+	@Autowired
+    private ModelMapper modelMapper;
 	
 	private static final Logger logger = Logger.getLogger(UserDetailsServiceImpl.class);
 	
@@ -56,11 +65,24 @@ public class BlogServiceImpl implements BlogService {
 	    
 		User singleUser = userService.getUserName(name);
 		post.setSingleUser(singleUser);
-		return postDao.save(post);
+		
+		Post finalPost=postDao.save(post);
+		
+		//Map to simplified Document Bean for Elastic Search storage object blog
+		Blog blog = modelMapper.map(finalPost, Blog.class);
+		blogElasticService.save(blog);
+
+		return finalPost;
 	}
 	
 	public Post updatePost(Post post) {
-		return postDao.save(post);
+		Post finalPost=postDao.save(post);
+		
+		//Map to simplified Document Bean for Elastic Search storage object blog
+		Blog blog = modelMapper.map(finalPost, Blog.class);
+		blogElasticService.save(blog);
+		
+		return postDao.save(finalPost);
 	}
 	
 	public List<Post> findAllPosts() {

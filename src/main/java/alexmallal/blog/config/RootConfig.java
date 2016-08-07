@@ -7,7 +7,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@ComponentScan(basePackages="alexmallal.blog.core",
+@ComponentScan(basePackages={"alexmallal.elasticsearch", "alexmallal.blog.core"},
 excludeFilters=@Filter(type = FilterType.REGEX, pattern="alexmallal.blog.core.web.*"))
 //implement persistence configs
 @Import({PersistenceContext.class, SecurityConfig.class})

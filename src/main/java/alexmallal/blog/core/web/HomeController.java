@@ -36,7 +36,7 @@ public class HomeController {
         return "post";
     }
     
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/post/{id}", method = RequestMethod.GET)
     public String makeIndPost(@PathVariable("id") long id, Model model){
     	//logs debug message
 		if(logger.isDebugEnabled()){
