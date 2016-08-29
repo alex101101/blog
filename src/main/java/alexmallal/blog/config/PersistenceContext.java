@@ -7,10 +7,10 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.node.NodeBuilder;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -26,17 +26,21 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 
 import alexmallal.elasticsearch.dao.BlogDao;
+import net.sf.ehcache.config.CacheConfiguration;
+import net.sf.ehcache.management.ManagementService;
 
-import javax.annotation.PostConstruct;
+import javax.management.MBeanServer;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.spi.PersistenceProvider;
+import javax.persistence.SharedCacheMode;
 import javax.sql.DataSource;
 
+import java.lang.management.ManagementFactory;
 import java.net.InetSocketAddress;
 import java.util.Properties;
 
 
 @Configuration
+@EnableMBeanExport
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "alexmallal", excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = BlogDao.class))
 @EnableElasticsearchRepositories(basePackages = "alexmallal.elasticsearch", includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = BlogDao.class))
@@ -46,6 +50,39 @@ public class PersistenceContext {
 	//change hibernate prooperties using environment
 	@Autowired
 	private Environment environment;
+
+	
+	//create a management service which is supposed to send ehcache manager stats to jconsole but only a few stats work
+	//Classnotfound exceptions thrown for a number of stats in jconsole
+    @Bean
+    public ManagementService managementService(){
+    	ManagementService managementService = new ManagementService(ehCacheManager(), mBeanServer(), true, true, true, true);
+    	managementService.init();
+    	return managementService;
+
+    } 
+    
+    @Bean
+    public MBeanServer mBeanServer(){
+    MBeanServer bean = ManagementFactory.getPlatformMBeanServer();
+    return bean;
+}
+    //bean modifies property settings for ehcache 
+	@Bean
+	public net.sf.ehcache.CacheManager ehCacheManager() {
+	    CacheConfiguration cacheConfiguration = new CacheConfiguration();
+	    cacheConfiguration.setName("DashboardServiceCache");
+	    cacheConfiguration.setMemoryStoreEvictionPolicy("LRU");
+	    cacheConfiguration.setOverflowToOffHeap(false);
+	    cacheConfiguration.setOverflowToDisk(false);
+	    cacheConfiguration.setStatistics(true);
+	    //1 day.
+	    cacheConfiguration.setTimeToIdleSeconds(86400);
+
+	    net.sf.ehcache.config.Configuration config = new net.sf.ehcache.config.Configuration();
+	    config.addCache(cacheConfiguration);
+	    return net.sf.ehcache.CacheManager.create(config);
+	}
     
     //transaction management
     @Bean
@@ -66,10 +103,15 @@ public class PersistenceContext {
         props.setProperty("hibernate.hbm2ddl.auto", environment.getRequiredProperty("hibernate.hbm2ddl.auto"));
         props.setProperty("hibernate.show_sql", environment.getRequiredProperty("hibernate.show_sql"));
         props.setProperty("hibernate.format_sql", environment.getRequiredProperty("hibernate.format_sql"));
-
+        props.setProperty("hibernate.cache.use_second_level_cache", "true");
+        props.setProperty("hibernate.cache.use_query_cache", "true");
+        props.setProperty("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
+        props.setProperty("hibernate.generate_statistics", "true");
+        
         bean.setJpaProperties(props);
         bean.setPersistenceUnitName( "mytestdomain" );
         //bean.setPersistenceProviderClass(PersistenceProvider.class);
+        bean.setSharedCacheMode(SharedCacheMode.ENABLE_SELECTIVE);
         bean.afterPropertiesSet();
         
         return bean.getObject();
@@ -109,4 +151,5 @@ public class PersistenceContext {
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
+    
 }

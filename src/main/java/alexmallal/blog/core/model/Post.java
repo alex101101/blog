@@ -4,10 +4,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
@@ -17,14 +21,20 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.apache.log4j.Logger;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import alexmallal.blog.core.commons.model.Base;
+import alexmallal.blog.core.web.UserRestController;
 
 @Entity
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "post")
-public class Post extends Base {
+public class Post extends Base{
+	private static final Logger logger = Logger.getLogger(UserRestController.class);
 
 	private String title;
 
@@ -67,6 +77,7 @@ public class Post extends Base {
 		this.byline = byline;
 	}
 	
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	@ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.MERGE)
     @JoinTable(name = "post_category", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
 	public List<Category> getCategories() {
@@ -131,6 +142,8 @@ public class Post extends Base {
 		this.thumbnail = thumbnail;
 	}
 	
+	
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	@ManyToOne(cascade = CascadeType.MERGE, fetch=FetchType.EAGER)
 	@JoinTable(name = "post_user", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	public User getSingleUser() {

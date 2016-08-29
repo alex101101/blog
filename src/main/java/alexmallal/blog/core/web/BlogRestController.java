@@ -12,7 +12,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +25,6 @@ import alexmallal.blog.core.model.User;
 import alexmallal.blog.core.services.BlogService;
 import alexmallal.blog.core.services.CategoryService;
 import alexmallal.blog.core.services.UserService;
-import alexmallal.elasticsearch.services.BlogElasticService;
 
 
 @RestController
@@ -40,18 +38,22 @@ public class BlogRestController {
 	@Autowired
 	CategoryService categoryService;
 	
+//	@Autowired
+//	private EntityManagerFactory entityManagerFactory;
+
 	
 	private static final Logger logger = Logger.getLogger(UserRestController.class);
 	
 	
 	@RequestMapping(value = "rest/blog/", produces=MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public ResponseEntity<List<Post>> getAllEntries() {
-
 			List<Post> blogList = blogService.findAllPosts();
 			if (blogList==null) {
 				logger.debug("No posts found");
 				return new ResponseEntity<List<Post>>(HttpStatus.NOT_FOUND);
 			}
+//			BlogRestController.printStatistics(entityManagerFactory);
+			
 			return new ResponseEntity<List<Post>>(blogList, HttpStatus.OK);
 
 	}
@@ -64,6 +66,7 @@ public class BlogRestController {
 				logger.debug("No post found for this id");
 				return new ResponseEntity<Post>(HttpStatus.NOT_FOUND);
 			}
+//			BlogRestController.printStatistics(entityManagerFactory);
 			return new ResponseEntity<Post>(singlePost, HttpStatus.OK);
 
 	}
@@ -130,7 +133,8 @@ public class BlogRestController {
 		return new ResponseEntity<Post>(HttpStatus.UNAUTHORIZED);
 
 	}
-//	
+	
+//	Todo: create deletes
 //	@RequestMapping(value = "rest/accountdetails/", produces=MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 //	public ResponseEntity<User> deleteUser(Principal principal) {
 //		final String currentUsername = principal.getName();
@@ -143,6 +147,24 @@ public class BlogRestController {
 //			userService.deleteUser(currentUser);
 //			return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
 //
+//	}
+
+	
+	//Added to view hibernate second level caching hits, superceded by jconsole JMX mbean configuration
+//	public static void printStatistics(EntityManagerFactory entityManagerFactory) {
+//		HibernateEntityManagerFactory entityManagerFactorynew = (HibernateEntityManagerFactory) entityManagerFactory;
+//		SessionFactory sessionFactory = entityManagerFactorynew.getSessionFactory();
+//	    Statistics stat = sessionFactory.getStatistics();
+//	    stat.setStatisticsEnabled(true);
+//	    logger.info("2nd Level Cache " + stat.getSecondLevelCacheHitCount());
+//	    String regions[] = stat.getSecondLevelCacheRegionNames();
+//	    logger.info(regions.toString());
+//	    for(String regionName:regions) {
+//	        SecondLevelCacheStatistics stat2 = stat.getSecondLevelCacheStatistics(regionName);
+//	        logger.info("2nd Level Cache(" +regionName+") Put Count: "+stat2.getPutCount());
+//	        logger.info("2nd Level Cache(" +regionName+") HIt Count: "+stat2.getHitCount());
+//	        logger.info("2nd Level Cache(" +regionName+") Miss Count: "+stat2.getMissCount());
+//	    }
 //	}
 
 }

@@ -118,7 +118,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		    .logout().permitAll().logoutSuccessUrl("/login?logoutSuccess")
 		    .logoutSuccessHandler(customLogoutSuccessHandler)
 		    .and()
-		    .csrf();
+		    .csrf()
+		    .and()
+		    .headers();
         }
     }
     

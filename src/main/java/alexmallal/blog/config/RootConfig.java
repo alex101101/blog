@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Import;
 @ComponentScan(basePackages={"alexmallal.elasticsearch", "alexmallal.blog.core"},
 excludeFilters=@Filter(type = FilterType.REGEX, pattern="alexmallal.blog.core.web.*"))
 //implement persistence configs
-@Import({PersistenceContext.class, SecurityConfig.class})
+@Import({PersistenceContext.class, SecurityConfig.class, RedisConfig.class, RabbitMqConfig.class})
 public class RootConfig {
 
 }

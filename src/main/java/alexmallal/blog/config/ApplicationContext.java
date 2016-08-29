@@ -28,6 +28,7 @@ import org.springframework.web.servlet.view.tiles3.TilesView;
 import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 
 
 @Configuration
@@ -113,6 +114,9 @@ public class ApplicationContext extends WebMvcConfigurerAdapter {
     public MappingJackson2HttpMessageConverter converter() {
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         ObjectMapper objectMapper = new ObjectMapper();
+        Hibernate4Module hm = new Hibernate4Module();
+        hm.enable(Hibernate4Module.Feature.FORCE_LAZY_LOADING);
+        objectMapper.registerModule(hm);
         objectMapper.setDateFormat(new SimpleDateFormat());
         converter.setObjectMapper(objectMapper);
         return converter;

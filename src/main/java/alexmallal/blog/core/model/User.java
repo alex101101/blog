@@ -10,6 +10,8 @@ import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.Email;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -20,6 +22,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import alexmallal.blog.core.commons.model.Base;
 
 @Entity
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "user")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User extends Base {
@@ -100,7 +103,8 @@ public class User extends Base {
 	}
 	
 	//@JsonIgnore
-	 @ManyToMany(fetch=FetchType.EAGER)
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+	 @ManyToMany(cascade = CascadeType.MERGE, fetch=FetchType.EAGER)
 	    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	    public Set<Role> getRoles() {
 	        return roles;

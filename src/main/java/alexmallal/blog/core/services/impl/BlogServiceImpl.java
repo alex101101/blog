@@ -9,22 +9,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import alexmallal.blog.core.dao.CategoryDao;
 import alexmallal.blog.core.dao.PostDao;
-import alexmallal.blog.core.model.Category;
 import alexmallal.blog.core.model.Post;
 import alexmallal.blog.core.model.User;
 import alexmallal.blog.core.services.BlogService;
 import alexmallal.blog.core.services.UserService;
+import alexmallal.blog.core.util.RabbitMqSender;
 import alexmallal.elasticsearch.model.Blog;
 import alexmallal.elasticsearch.services.BlogElasticService;
 
 @Service("blogService")
+//@CacheConfig(cacheNames="posts")
 public class BlogServiceImpl implements BlogService {
 	
 	@Autowired
@@ -38,9 +37,14 @@ public class BlogServiceImpl implements BlogService {
 	
 	@Autowired
     private ModelMapper modelMapper;
+
+	@Autowired
+	private RabbitMqSender rabbitMqSender;
+	
 	
 	private static final Logger logger = Logger.getLogger(UserDetailsServiceImpl.class);
 	
+//	@Cacheable
 	public Post findPostById(Long id) {
 		return postDao.findById(id);
 	}
@@ -53,6 +57,7 @@ public class BlogServiceImpl implements BlogService {
 		return postDao.countAllPosts();
 	}
 	
+//	@CachePut(key="#post.id")
 	public Post createPost(Post post) {
 		post.setDateCreated(new Date());
 		//Get current authenticated user
@@ -67,10 +72,12 @@ public class BlogServiceImpl implements BlogService {
 		post.setSingleUser(singleUser);
 		
 		Post finalPost=postDao.save(post);
-		
+		 
 		//Map to simplified Document Bean for Elastic Search storage object blog
 		Blog blog = modelMapper.map(finalPost, Blog.class);
 		blogElasticService.save(blog);
+       
+		rabbitMqSender.sendToRabbitmq(blog);
 
 		return finalPost;
 	}
@@ -84,6 +91,7 @@ public class BlogServiceImpl implements BlogService {
 		
 		return postDao.save(finalPost);
 	}
+	
 	
 	public List<Post> findAllPosts() {
 		return postDao.findAll();
@@ -101,5 +109,7 @@ public class BlogServiceImpl implements BlogService {
 	public List<Post> searchForPostsByTitle(String title) {
 		return postDao.findByTitle(title);
 	}
+	
+	
 
 }
